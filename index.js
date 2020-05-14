@@ -19,12 +19,21 @@ const persons = [
     }
 ]
 
+const resp = `
+            Phonebook has info for ${persons.length} people 
+            </br></br>
+            ${new Date()}
+            `
 
 
 app.use(express.json())
 
 app.get('/api/persons', (req, res) => {
     res.json(persons)
+})
+
+app.get('/info', (req, res) => {
+    res.send(resp)
 })
 
 
