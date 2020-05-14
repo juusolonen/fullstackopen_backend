@@ -1,0 +1,27 @@
+{
+  "name": "puhelinluettelo_backend",
+  "version": "1.0.0",
+  "description": "node-backend",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/juusolonen/fullstackopen_backend.git"
+  },
+  "author": "Juuso Solonen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/juusolonen/fullstackopen_backend/issues"
+  },
+  "homepage": "https://github.com/juusolonen/fullstackopen_backend#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.3"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
