@@ -36,6 +36,15 @@ app.get('/info', (req, res) => {
     res.send(resp)
 })
 
+app.get('/api/persons/:id', (req, res) => {
+    if(persons[req.params.id]) {
+        return res.send(persons[req.params.id])
+    } else {
+        return res.status(404).end()
+    }
+
+})
+
 
 app.listen(3001, () => {
     console.log("Open in port 3001")
