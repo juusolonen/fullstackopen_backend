@@ -51,13 +51,29 @@ app.delete('/api/persons/:id', (req, res) => {
 })
 
 app.post('/api/persons', (req, res) => {
-    let newPerson = {
-                    name: req.body.name,
-                    number: req.body.number,
-                    id: Math.ceil(Math.random() * 100)
+    let errorMessage = {}
+
+    let nameExists = persons.find(person => person.name === req.body.name)
+
+    if(!req.body.name) {
+        errorMessage.error = "new person must have a name"
+        res.status(400).json({error: errorMessage.error})
+    } else if (!req.body.number) {
+        errorMessage.error = "new person must have a number"
+        res.status(400).json({error: errorMessage.error})
+    } else if (nameExists) {
+        errorMessage.error = "person already exists"
+        res.status(400).json({error: errorMessage.error})
+    } else {
+        let newPerson = {
+                        name: req.body.name,
+                        number: req.body.number,
+                        id: Math.ceil(Math.random() * 100)
+                        }
+        persons = persons.concat(newPerson)
+        res.json(persons)
     }
-    persons = persons.concat(newPerson)
-    res.json(persons)
+
  
 })
 
