@@ -50,6 +50,17 @@ app.delete('/api/persons/:id', (req, res) => {
     res.status(204).end()
 })
 
+app.post('/api/persons', (req, res) => {
+    let newPerson = {
+                    name: req.body.name,
+                    number: req.body.number,
+                    id: Math.ceil(Math.random() * 100)
+    }
+    persons = persons.concat(newPerson)
+    res.json(persons)
+ 
+})
+
 
 app.listen(3001, () => {
     console.log("Open in port 3001")
