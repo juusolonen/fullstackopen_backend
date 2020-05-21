@@ -25,10 +25,10 @@ const resp = `
             </br></br>
             ${new Date()}
             `
-
+morgan.token('postdata', function (req, res) { return JSON.stringify(req.body) })
 
 app.use(express.json())
-app.use(morgan('tiny'))
+app.use(morgan(':method :url :status :response-time ms - :postdata'))
 
 app.get('/api/persons', (req, res) => {
     res.json(persons)
