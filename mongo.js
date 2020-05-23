@@ -1,8 +1,7 @@
+require('dotenv').config()
 const mongoose = require('mongoose')
 
-const pwd = process.argv[2]
-
-const url = `mongodb+srv://juusokayttaja:${pwd}@cluster0-ljqfc.mongodb.net/puhelinluettelo?retryWrites=true&w=majority`
+const url = process.env.MONGODB_URI
 
 
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -33,7 +32,7 @@ if (process.argv.length === 3) {
         result.forEach(person=> {
             console.log(`${person.name} ${person.number}`)
         });
-        mongoose.connection.close()
+        
     })
 }
 
