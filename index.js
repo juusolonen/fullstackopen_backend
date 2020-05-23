@@ -4,23 +4,7 @@ var morgan = require('morgan')
 const cors = require('cors')
 const Person = require('./models/person')
 
-let persons = [
-    {
-        name: "Arto Hellas",
-        number: "050-1234567",
-        id: 1
-    },
-    {
-        name: "Joku Testinen",
-        number: "050-7654321",
-        id: 2
-    },
-    {
-        name: "Chuck Norris",
-        number: "1",
-        id: 3
-    }
-]
+let persons = []
 
 const resp = `
             Phonebook has info for ${persons.length} people 
@@ -37,7 +21,8 @@ app.use(morgan(':method :url :status :response-time ms - :postdata'))
 app.get('/api/persons', (req, res) => {
     Person.find({})
         .then(result => {
-            res.json(result)
+            persons = result
+            res.json(persons)
         })
 })
 
@@ -74,13 +59,18 @@ app.post('/api/persons', (req, res) => {
         errorMessage.error = "person already exists"
         res.status(400).json({error: errorMessage.error})
     } else {
-        let newPerson = {
+        let newPerson = new Person({
                         name: req.body.name,
-                        number: req.body.number,
-                        id: Math.ceil(Math.random() * 100)
-                        }
-        persons = persons.concat(newPerson)
-        res.json(persons)
+                        number: req.body.number
+                       // id: Math.ceil(Math.random() * 100)
+                        })
+        
+        newPerson.save()
+            .then(result => {
+               persons = persons.concat(result)
+               res.json(persons)
+            })
+
     }
 
  
