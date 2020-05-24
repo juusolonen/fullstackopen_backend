@@ -40,8 +40,12 @@ app.get('/api/persons/:id', (req, res) => {
 })
 
 app.delete('/api/persons/:id', (req, res) => {
-    persons = persons.filter(person => person.id !== req.params.id)
-    res.status(204).end()
+    Person.findByIdAndRemove(req.params.id)
+        .then(result => {
+            res.status(204).end()
+        })
+        .catch(error => console.error(error.message))
+
 })
 
 app.post('/api/persons', (req, res) => {
@@ -77,7 +81,7 @@ app.post('/api/persons', (req, res) => {
 })
 
 
-const port = process.env.PORT || 8000
+const port = process.env.PORT || 3001
 app.listen(port, () => {
     console.log(`Open in port ${port}`)
 })
