@@ -30,38 +30,37 @@ app.get('/info', (req, res) => {
     res.send(resp)
 })
 
-app.get('/api/persons/:id', (req, res) => {
+app.get('/api/persons/:id', (req, res, next) => {
     if(persons[req.params.id]) {
         return res.json(persons[req.params.id])
     } else {
-        return res.status(404).end()
+        next(error)
     }
 
 })
 
-app.delete('/api/persons/:id', (req, res) => {
+app.delete('/api/persons/:id', (req, res, next) => {
     Person.findByIdAndRemove(req.params.id)
         .then(result => {
             res.status(204).end()
         })
-        .catch(error => console.error(error.message))
+        .catch(error => {
+            next(error)
+        })
 
 })
 
-app.post('/api/persons', (req, res) => {
-    let errorMessage = {}
+app.post('/api/persons', (req, res, next) => {
+
 
     let nameExists = persons.find(person => person.name === req.body.name)
 
     if(!req.body.name) {
-        errorMessage.error = "new person must have a name"
-        res.status(400).json({error: errorMessage.error})
+        next("new person must have a name")
     } else if (!req.body.number) {
-        errorMessage.error = "new person must have a number"
-        res.status(400).json({error: errorMessage.error})
+        next("new person must have a number")
     } else if (nameExists) {
-        errorMessage.error = "person already exists"
-        res.status(400).json({error: errorMessage.error})
+        next("person already exists")
     } else {
         let newPerson = new Person({
                         name: req.body.name,
@@ -74,12 +73,28 @@ app.post('/api/persons', (req, res) => {
                persons = persons.concat(result)
                res.json(persons)
             })
-
     }
-
- 
 })
 
+const errorHandler = (err, req, res, next) => {
+      
+
+    if(err){
+        if(err.name === 'CastError'){
+            return res.status(400).send({error: 'Check the id'})
+        }else {
+            return res.status(400).json(err)
+        }
+
+    } else {
+        res.status(404).end()
+    }
+
+
+
+}
+
+app.use(errorHandler)
 
 const port = process.env.PORT || 3001
 app.listen(port, () => {
