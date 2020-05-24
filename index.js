@@ -27,17 +27,28 @@ app.get('/api/persons', (req, res) => {
 })
 
 app.get('/info', (req, res) => {
-    res.send(resp)
+    Person.find({})
+    .then(result => {
+        persons = result
+        res.send(`
+        Phonebook has info for ${persons.length} people 
+        </br></br>
+        ${new Date()}
+        `)
+    })
 })
 
 app.get('/api/persons/:id', (req, res, next) => {
-    if(persons[req.params.id]) {
-        return res.json(persons[req.params.id])
-    } else {
-        next(error)
-    }
+    Person.findById(req.params.id)
+        .then(result => {
+            res.status(200).json(result)
+        })
+        .catch(error => next(error))
 
-})
+    })
+
+
+
 
 app.delete('/api/persons/:id', (req, res, next) => {
     Person.findByIdAndRemove(req.params.id)
