@@ -95,8 +95,8 @@ const errorHandler = (err, req, res, next) => {
         if(err.name === 'CastError'){
             return res.status(400).send({error: 'Check the id'})
         }else {
-            if(err.name.message) {
-                return res.status(400).json(err.name.message)
+            if(err.name === 'ValidationError') {
+                return res.status(400).json(err.message)
             } else {
                 return res.status(400).json(err)
             }
