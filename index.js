@@ -6,11 +6,7 @@ const Person = require('./models/person')
 
 let persons = []
 
-const resp = `
-            Phonebook has info for ${persons.length} people 
-            </br></br>
-            ${new Date()}
-            `
+
 morgan.token('postdata', function (req, res) { return JSON.stringify(req.body) })
 
 app.use(cors())
@@ -77,15 +73,6 @@ app.put('/api/persons/:id', (req, res, next) => {
 app.post('/api/persons', (req, res, next) => {
 
 
-    let nameExists = persons.find(person => person.name === req.body.name)
-
-    if(!req.body.name) {
-        next("new person must have a name")
-    } else if (!req.body.number) {
-        next("new person must have a number")
-    } else if (nameExists) {
-        next("person already exists")
-    } else {
         let newPerson = new Person({
                         name: req.body.name,
                         number: req.body.number
@@ -97,7 +84,8 @@ app.post('/api/persons', (req, res, next) => {
                persons = persons.concat(result)
                res.json(persons)
             })
-    }
+            .catch(err => next(err))
+    
 })
 
 const errorHandler = (err, req, res, next) => {
@@ -107,7 +95,12 @@ const errorHandler = (err, req, res, next) => {
         if(err.name === 'CastError'){
             return res.status(400).send({error: 'Check the id'})
         }else {
-            return res.status(400).json(err)
+            if(err.name.message) {
+                return res.status(400).json(err.name.message)
+            } else {
+                return res.status(400).json(err)
+            }
+
         }
 
     } else {
